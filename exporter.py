@@ -3,6 +3,8 @@
 from pathlib import Path
 import re
 import sys
+from datetime import datetime
+import os
 
 import lea
 from utils import *
@@ -117,7 +119,7 @@ def save_note_as_md(note, nb_id_to_paths, output_path='./', img_path='./images',
         forced_save: Force to save images if True.
         add_hexo_meta: Add hexo meta header at the beginning of the note if True.
     """
-    if note['IsTrash'] or not note['IsMarkdown']:
+    if note['IsTrash']or not note['IsMarkdown']:
         return
     if only_blog and not note['IsBlog']:
         return
@@ -153,13 +155,16 @@ def save_note_as_md(note, nb_id_to_paths, output_path='./', img_path='./images',
 
     try:
         with open(filepath, 'w', encoding='utf-8') as fd:
-            fd.write('---\n')
-            for h in hexo_meta_header:
-                fd.write('%s: %s\n' % (h, hexo_meta_header[h]))
-            fd.write('---\n')
+            # fd.write('---\n')
+            # for h in hexo_meta_header:
+            #     fd.write('%s: %s\n' % (h, hexo_meta_header[h]))
+            # fd.write('---\n')
             fd.write(content)
     except OSError as e:
         print(e)
+    
+    created_time = datetime.fromisoformat(created_time).timestamp()
+    os.utime(filepath, (created_time, created_time))
 
 
 if __name__ == '__main__':
@@ -200,8 +205,13 @@ if __name__ == '__main__':
     nb_id_to_paths = get_notebooks_paths(notebooks)
 
     for nb in notebooks:
+        if nb.get('IsDeleted') or nb.get('IsTrash'):
+            continue
+        print('Getting notes for notebook {}...'.format(nb['Title']))
         notes = lea.get_notes(nb['NotebookId'])
         for note in notes:
+            if note['NotebookId'] != nb['NotebookId']:
+                continue
             note = lea.get_note(note['NoteId'])
             save_note_as_md(note, nb_id_to_paths, output_path=output_path,
                     img_path=img_path, img_link_path=img_link_path,

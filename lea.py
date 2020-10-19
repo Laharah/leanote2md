@@ -3,7 +3,7 @@
 
 import requests as req
 
-LEANOTE_API_BASE = 'https://leanote.com/api'
+LEANOTE_API_BASE = 'https://nowwegottadothisallday.net:9000/api'
 token = ''
 
 def login(email, pwd):
