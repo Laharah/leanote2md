@@ -39,10 +39,10 @@ If you don't want to save your notes interactively, you need to modify `config.p
 # Exporting leanote notes to joplin
 
 leanote exporting is a clusterfuck and you always lose creation times and media
-resources. Here's the steps to export the notes so they can be imported correctly into
+resources. Here's the steps to export the notes so they can be imported correctly as
 joplin markdown notes.
 
-1. run export.py and download the leanote markdown notes (fill in config for convince)
+1. run export.py and download the leanote markdown notes (fill in config for convenience)
 
 2. import markdown directories into joplin
 
